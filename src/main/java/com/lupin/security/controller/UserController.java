@@ -12,7 +12,7 @@ public class UserController {
     @Autowired
     private UserServiceImpl UserServiceImpl;
 
-    @PostMapping("/add")
+    @PostMapping("/addUser")
     public String addUser(@RequestBody User user){
         UserServiceImpl.addNewUser(user);
         return "add user success";

@@ -5,6 +5,8 @@ import com.lupin.security.service.BookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.RequestEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,68 +18,68 @@ public class BookController {
     private BookServiceImpl bookServiceimpl;
 
     @GetMapping("/getBooks")
-    public List<Books> getAll() {
-        return bookServiceimpl.getAll();
+    public RequestEntity<?> getBooks() {
+        return new RequestEntity<>(bookServiceimpl.getAll(), HttpMethod.GET, null);
     }
 
     @GetMapping("/getBookSortedByCountAsc")
-    public Page<Books> getSortCountAsc(@Param("start") int start, @Param("end") int end){
-        return bookServiceimpl.getAllSortCountAsc(start, end);
+    public RequestEntity<?> getSortCountAsc(@Param("start") int start, @Param("end") int end){
+        return new RequestEntity<>(bookServiceimpl.getAllSortCountAsc(start, end), HttpMethod.GET, null);
     }
 
     @GetMapping("/getBookSortedByCountDesc")
-    public Page<Books> getSortCountDesc(@Param("start") int start, @Param("end") int end){
-        return bookServiceimpl.getAllSortCountDsc(start, end);
+    public RequestEntity<?> getSortCountDesc(@Param("start") int start, @Param("end") int end){
+        return new RequestEntity<>(bookServiceimpl.getAllSortCountDsc(start, end), HttpMethod.GET, null);
     }
 
     @GetMapping("/bookHasMaxCount")
-    public Books maxCount(){
-        return bookServiceimpl.maxCount();
+    public RequestEntity<?> maxCount(){
+        return new RequestEntity<>(bookServiceimpl.maxCount(), HttpMethod.GET, null);
     }
 
     @GetMapping("/bookHasMinCount")
-    public Books minCount(){
-        return bookServiceimpl.minCount();
+    public RequestEntity<?> minCount(){
+        return new RequestEntity<>(bookServiceimpl.minCount(),HttpMethod.GET,null);
     }
 
     @GetMapping("/getBookSortedByNameAsc")
-    public Page<Books> getSortNameAsc(@Param("start") int start, @Param("end") int end){
-        return bookServiceimpl.getAllSortNameAsc(start, end);
+    public RequestEntity<?> getSortNameAsc(@Param("start") int start, @Param("end") int end){
+        return new RequestEntity<>(bookServiceimpl.getAllSortNameAsc(start, end),HttpMethod.GET,null);
     }
 
     @GetMapping("/getBookSortedByNameDesc")
-    public Page<Books> getSortNameDesc(@Param("start") int start, @Param("end") int end){
-        return bookServiceimpl.getAllSortNameDsc(start, end);
+    public RequestEntity<?> getSortNameDesc(@Param("start") int start, @Param("end") int end){
+        return new RequestEntity<>(bookServiceimpl.getAllSortNameDsc(start, end),HttpMethod.GET,null);
     }
 
     @PostMapping("/addBook")
-    public String add(@RequestBody Books book){
+    public RequestEntity<?> add(@RequestBody Books book){
         bookServiceimpl.addBook(book);
-        return "add success";
+        return new RequestEntity<>("add user success",HttpMethod.POST,null);
     }
 
     @DeleteMapping("/removeBookId")
-    public String deleteBook(@Param("id") int id){
+    public RequestEntity<?> deleteBook(@Param("id") int id){
         bookServiceimpl.deleteBookById(id);
-        return "delete complete id = " + id;
+        return new RequestEntity<>("delete complete id = " + id, HttpMethod.DELETE,null);
     }
 
     @DeleteMapping("/removeBookByName")
-    public String deleteBookName(@Param("name") String name){
+    public RequestEntity<?> deleteBookName(@Param("name") String name){
         bookServiceimpl.deleteBookByName(name);
-        return "delete success book named : " + name;
+        return new RequestEntity<>("delete success book named : " + name, HttpMethod.DELETE,null);
     }
 
     @PutMapping("/updateBookByID")
-    public String updateBookId(@Param("id") int id,@Param("count")int count){
+    public RequestEntity<?> updateBookId(@Param("id") int id,@Param("count")int count) {
         bookServiceimpl.updateBookById(id, count);
-        return "update complete";
+        return new RequestEntity<>("update complete : "+id, HttpMethod.PUT,null);
     }
 
     @PutMapping("updateBookByName")
-    public String updateBookByName(@Param("name") String name, @Param("count") int count){
+    public RequestEntity<?> updateBookByName(@Param("name") String name, @Param("count") int count){
         bookServiceimpl.updateBookBynName(name, count);
-        return "update success";
+        return new RequestEntity<>("update success : "+name, HttpMethod.PUT,null);
     }
 
 }

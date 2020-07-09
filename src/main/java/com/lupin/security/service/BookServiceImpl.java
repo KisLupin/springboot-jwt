@@ -1,15 +1,16 @@
 package com.lupin.security.service;
 
-import com.lupin.security.exception.BooksException;
 import com.lupin.security.inter.BookService;
 import com.lupin.security.model.Books;
 import com.lupin.security.repository.BookRepository;
 import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,7 +84,6 @@ public class BookServiceImpl implements BookService {
         if (book.isPresent()) bookRepository.deleteById(id);
         else {
             System.out.println("This ID does not exit");
-//            throw new BooksException("ID does not exist");
         }
     }
 
@@ -93,7 +93,6 @@ public class BookServiceImpl implements BookService {
         if (book.isPresent()) bookRepository.deleteById(book.get().getId());
         else {
             System.out.println("This ID does not exit");
-//            throw new BooksException("ID does not exist");
         }
     }
 
@@ -105,7 +104,7 @@ public class BookServiceImpl implements BookService {
             bookRepository.save(book.get());
         }
         else {
-            System.out.println("pls type another id");
+
         }
     }
 

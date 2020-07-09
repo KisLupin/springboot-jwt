@@ -40,7 +40,7 @@ public class AuthController {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         final UserDetails userDetails = jwtUserDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
-        final String token = jwtToken.generateToken(userDetails);
+        final String token = jwtToken.generateToken(userDetails); // need save this token
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
