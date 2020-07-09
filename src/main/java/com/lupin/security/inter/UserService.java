@@ -1,4 +1,4 @@
-package com.lupin.security.repository;
+package com.lupin.security.inter;
 
 import com.lupin.security.model.User;
 
