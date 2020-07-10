@@ -1,5 +1,6 @@
 package com.lupin.security.controller;
 
+import com.lupin.security.exception.BookException;
 import com.lupin.security.inter.BookService;
 import com.lupin.security.inter.UserTokenService;
 import com.lupin.security.model.Books;
@@ -8,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.awt.print.Book;
 
 @RestController
 @RequestMapping("/book")
@@ -75,9 +78,17 @@ public class BookController {
     }
 
     @PutMapping("updateBookByName")
-    public RequestEntity<?> updateBookByName(@Param("name") String name, @Param("count") int count){
+    public RequestEntity<?> updateBookByName(@Param("name") String name, @Param("count") int count) throws BookException{
         bookService.updateBookBynName(name, count);
         return new RequestEntity<>("update success : "+name, HttpMethod.PUT,null);
     }
 
+    @GetMapping("/findById")
+    public RequestEntity<?> findById(@Param("id") int id) throws BookException {
+        try {
+            return new RequestEntity<>(bookService.findById(id), HttpMethod.GET, null);
+        }catch (Exception ex){
+            throw new BookException("id not exits");
+        }
+    }
 }

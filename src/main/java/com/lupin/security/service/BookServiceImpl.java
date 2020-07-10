@@ -1,5 +1,6 @@
 package com.lupin.security.service;
 
+import com.lupin.security.exception.BookException;
 import com.lupin.security.inter.BookService;
 import com.lupin.security.model.Books;
 import com.lupin.security.repository.BookRepository;
@@ -109,15 +110,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void updateBookBynName(String name, int count) {
+    public void updateBookBynName(String name, int count) throws BookException{
         Optional<Books> book = bookRepository.findByName(name);
         if (book.isPresent()) {
             book.get().setCount(count);
             bookRepository.save(book.get());
         }
         else {
-            System.out.println("pls type another name");
+            throw new BookException("name's book is not exist");
         }
+    }
+
+    @Override
+    public Books findById(int id) {
+        return bookRepository.findById(id).get();
     }
 
 }

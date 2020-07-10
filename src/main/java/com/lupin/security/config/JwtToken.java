@@ -1,5 +1,6 @@
 package com.lupin.security.config;
 
+import com.lupin.security.common.Common;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,8 +16,7 @@ import java.util.function.Function;
 @Component
 public class JwtToken implements Serializable {
 
-    private static final long serialVersionUID = -2550185165626007488L;
-    public static final long JWT_TOKEN_VALIDITY = 10  * 60 * 60;
+    private static final long serialVersionUID = Common.serialVersionUID_JwtToken;
     @Value("${jwt.secret}")
     private String secret;
 
@@ -54,7 +54,7 @@ public class JwtToken implements Serializable {
                                 .setClaims(claims)
                                 .setSubject(subject)
                                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                                .setExpiration(new Date(System.currentTimeMillis() + Common.JWT_TOKEN_VALIDITY * 1000))
                                 .signWith(SignatureAlgorithm.HS512, secret)
                                 .compact();
     }

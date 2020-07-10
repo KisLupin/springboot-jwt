@@ -1,5 +1,6 @@
 package com.lupin.security.inter;
 
+import com.lupin.security.exception.BookException;
 import com.lupin.security.model.Books;
 import org.springframework.data.domain.Page;
 
@@ -17,5 +18,6 @@ public interface BookService {
     void deleteBookById(int id);
     void deleteBookByName(String id);
     void updateBookById(int id, int count);
-    void updateBookBynName(String name, int count);
+    void updateBookBynName(String name, int count) throws BookException;
+    Books findById(int id);
 }
