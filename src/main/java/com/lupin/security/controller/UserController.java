@@ -1,5 +1,6 @@
 package com.lupin.security.controller;
 
+import com.lupin.security.inter.UserService;
 import com.lupin.security.model.User;
 import com.lupin.security.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
     @Autowired
-    private UserServiceImpl UserServiceImpl;
+    private UserService UserServiceImpl;
 
     @PostMapping("/addUser")
     public String addUser(@RequestBody User user){

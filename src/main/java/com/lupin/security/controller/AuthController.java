@@ -1,8 +1,10 @@
 package com.lupin.security.controller;
 
 import com.lupin.security.config.JwtToken;
+import com.lupin.security.inter.UserTokenService;
 import com.lupin.security.model.JwtRequest;
 import com.lupin.security.model.JwtResponse;
+import com.lupin.security.model.UserToken;
 import com.lupin.security.service.JwtUserDetailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,6 +32,8 @@ public class AuthController {
     private JwtToken jwtToken;
     @Autowired
     private JwtUserDetailService jwtUserDetailsService;
+    @Autowired
+    private UserTokenService userTokenService;
 
     @Operation(summary = "Authenticate", description = "Authenticate user credentials", tags = { "authenticate" })
     @ApiResponses(value = {
@@ -37,13 +41,15 @@ public class AuthController {
                     content = @Content(schema = @Schema(implementation = JwtResponse.class))) })
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword()); //login get token
         final UserDetails userDetails = jwtUserDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtToken.generateToken(userDetails); // need save this token
+        userTokenService.save(new UserToken(userDetails.getUsername(),token));//save username and token is hashmap in redis
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
+    //check authenticate
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

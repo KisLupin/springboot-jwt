@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JwtAuthenticationEntryPoint jwtAuthenticationEntryPointBean() throws Exception{
+    public JwtAuthenticationEntryPoint jwtAuthenticationEntryPointBean() throws Exception {
         return new JwtAuthenticationEntryPoint();
     }
 
@@ -53,8 +53,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/authenticate","/user","/swagger-ui.html","/swagger-ui/**"
-                ,"/v3/api-docs/**","/addUser").permitAll().
+                .antMatchers("/authenticate", "/user", "/swagger-ui.html", "/swagger-ui/**"
+                        , "/v3/api-docs/**", "/addUser").permitAll().
                 anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
