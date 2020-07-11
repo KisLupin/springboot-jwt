@@ -1,7 +1,12 @@
 package com.lupin.security.exception;
 
-public class BookException extends Exception {
-    public BookException(String message) {
-        super(message);
+import java.util.NoSuchElementException;
+
+public class BookException extends NoSuchElementException {
+    public BookException(String s) {
+        super(s);
+    }
+
+    public BookException() {
     }
 }

@@ -18,6 +18,6 @@ public interface BookService {
     void deleteBookById(int id);
     void deleteBookByName(String id);
     void updateBookById(int id, int count);
-    void updateBookBynName(String name, int count) throws BookException;
+    void updateBookByName(String name, int count);
     Books findById(int id);
 }

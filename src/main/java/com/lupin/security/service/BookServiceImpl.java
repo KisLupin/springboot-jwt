@@ -1,5 +1,7 @@
 package com.lupin.security.service;
 
+import com.lupin.security.common.Common;
+import com.lupin.security.common.ErrorCode;
 import com.lupin.security.exception.BookException;
 import com.lupin.security.inter.BookService;
 import com.lupin.security.model.Books;
@@ -12,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Book;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -76,54 +80,51 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void addBook(Books book) {
+        if (book.getName() == null) {
+            throw new BookException(Common.NO_NAME_BOOK);
+        }
+        else if (!bookRepository.findByName(book.getName()).isEmpty()) {
+            throw new BookException(ErrorCode.FAIL_SAME_NAME.nameError);
+        }
         bookRepository.save(book);
     }
 
     @Override
     public void deleteBookById(int id) {
         Optional<Books> book = bookRepository.findById(id);
-        if (book.isPresent()) bookRepository.deleteById(id);
-        else {
-            System.out.println("This ID does not exit");
-        }
+        if (book.isEmpty()) throw new BookException(Common.ID_NOT_EXIST);
+        bookRepository.deleteById(id);
     }
 
     @Override
     public void deleteBookByName(String name) {
         Optional<Books> book = bookRepository.findByName(name);
-        if (book.isPresent()) bookRepository.deleteById(book.get().getId());
-        else {
-            System.out.println("This ID does not exit");
-        }
+        if (book.isEmpty()) throw new BookException(Common.NAME_NOT_EXIST);
+        bookRepository.deleteById(book.get().getId());
     }
 
     @Override
     public void updateBookById(int id, int count) {
         Optional<Books> book = bookRepository.findById(id);
-        if (book.isPresent()) {
-            book.get().setCount(count);
-            bookRepository.save(book.get());
-        }
-        else {
-
-        }
+        book.get().setCount(count);
+        bookRepository.save(book.get());
     }
 
     @Override
-    public void updateBookBynName(String name, int count) throws BookException{
+    public void updateBookByName(String name, int count){
         Optional<Books> book = bookRepository.findByName(name);
-        if (book.isPresent()) {
-            book.get().setCount(count);
-            bookRepository.save(book.get());
-        }
-        else {
-            throw new BookException("name's book is not exist");
-        }
+        if (book.isEmpty())
+            throw new BookException(Common.UPDATE_BY_NAME_FAIL);
+        book.get().setCount(count);
+        bookRepository.save(book.get());
     }
 
     @Override
     public Books findById(int id) {
-        return bookRepository.findById(id).get();
+        Optional<Books> books = bookRepository.findById(id);
+        if (books.isEmpty())
+            throw new BookException("id not exist");
+        return books.get();
     }
 
 }
