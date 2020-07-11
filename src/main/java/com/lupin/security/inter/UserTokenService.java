@@ -10,4 +10,5 @@ public interface UserTokenService {
     UserToken findById(String name);
     void update(UserToken user);
     void delete(String name);
+    UserToken get(String name);
 }

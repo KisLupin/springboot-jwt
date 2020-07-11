@@ -1,6 +1,7 @@
 package com.lupin.security.config;
 
 import com.lupin.security.common.Common;
+import com.lupin.security.model.UserToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -59,8 +60,8 @@ public class JwtToken implements Serializable {
                                 .compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token, UserToken userToken) {
         final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (username.equals(userToken.getUsername()) && !isTokenExpired(token));
     }
 }

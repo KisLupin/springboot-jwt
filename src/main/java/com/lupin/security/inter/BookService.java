@@ -20,4 +20,5 @@ public interface BookService {
     void updateBookById(int id, int count);
     void updateBookByName(String name, int count);
     Books findById(int id);
+    Page<Books> getPages(int start, int end);
 }

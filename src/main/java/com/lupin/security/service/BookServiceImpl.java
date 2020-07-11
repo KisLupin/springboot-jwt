@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Book;
 import java.util.List;
@@ -31,19 +32,27 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<Books> getAllSortCountAsc(int start, int end) {
+    public Page<Books> getPages(int page, int size) {
         Pageable sortedByName =
-                PageRequest.of(start, end, Sort.by("count").ascending());
-        Page<Books> page = bookRepository.findAll(sortedByName);
-        return page;
+                PageRequest.of(page, size);
+        Page<Books> pages = bookRepository.findAll(sortedByName);
+        return pages;
     }
 
     @Override
-    public Page<Books> getAllSortCountDsc(int start, int end) {
+    public Page<Books> getAllSortCountAsc(int page, int size) {
+        Pageable sortedByName =
+                PageRequest.of(page, size, Sort.by("count").ascending());
+        Page<Books> pages = bookRepository.findAll(sortedByName);
+        return pages;
+    }
+
+    @Override
+    public Page<Books> getAllSortCountDsc(int page, int size) {
         Pageable sortedCount =
-                PageRequest.of(start, end, Sort.by("count").descending());
-        Page<Books> page = bookRepository.findAll(sortedCount);
-        return page;
+                PageRequest.of(page, size, Sort.by("count").descending());
+        Page<Books> pages = bookRepository.findAll(sortedCount);
+        return pages;
     }
 
     @Override
@@ -79,6 +88,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void addBook(Books book) {
         if (book.getName() == null) {
             throw new BookException(Common.NO_NAME_BOOK);
@@ -126,5 +136,4 @@ public class BookServiceImpl implements BookService {
             throw new BookException("id not exist");
         return books.get();
     }
-
 }

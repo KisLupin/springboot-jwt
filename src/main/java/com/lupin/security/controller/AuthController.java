@@ -44,8 +44,9 @@ public class AuthController {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword()); //login get token
         final UserDetails userDetails = jwtUserDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
+
         final String token = jwtToken.generateToken(userDetails); // need save this token
-        userTokenService.save(new UserToken(userDetails.getUsername(),token));//save username and token is hashmap in redis
+        userTokenService.save(new UserToken(userDetails.getUsername(),token,userDetails.getAuthorities()));//save username and token is hashmap in redis
         return ResponseEntity.ok(new JwtResponse(token));
     }
 

@@ -15,7 +15,6 @@ public class UserTokenAccessServiceImpl implements UserTokenService {
 
     private HashOperations hashOperations;
 
-
     public UserTokenAccessServiceImpl(RedisTemplate<String, UserToken> redisTemplate) {
         this.redisTemplate = redisTemplate;
 
@@ -24,7 +23,7 @@ public class UserTokenAccessServiceImpl implements UserTokenService {
 
     @Override
     public void save(UserToken user) {
-        hashOperations.put("NameAndToken", user.getUsername(), user.getToken());
+        hashOperations.put("NameAndToken", user.getUsername(), user);
     }
 
     @Override
@@ -46,5 +45,10 @@ public class UserTokenAccessServiceImpl implements UserTokenService {
     public void delete(String name) {
 
         hashOperations.delete("NameAndToken", name);
+    }
+
+    @Override
+    public UserToken get(String name) {
+        return findAll().get(name);
     }
 }

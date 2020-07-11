@@ -8,64 +8,66 @@ import com.lupin.security.model.ApiResponse;
 import com.lupin.security.model.Books;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.awt.print.Book;
 
 @RestController
 @RequestMapping("/book")
-public class BookController extends ResponseEntityExceptionHandler {
+
+public class BookController {
     @Autowired
     private BookService bookService;
 
-    @GetMapping("/getBooks")
+    @GetMapping("/")
     public ResponseEntity<?> getBooks() {
         ApiResponse apiResponse = new ApiResponse(ErrorCode.SUCCESS.ID, bookService.getAll(),null,Common.SUCCESS);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/getBookSortedByCountAsc")
-    public ResponseEntity<?> getSortCountAsc(@Param("start") int start, @Param("end") int end){
-        ApiResponse apiResponse = new ApiResponse(ErrorCode.SUCCESS.ID, bookService.getAllSortCountAsc(start,end),null,Common.SUCCESS);
+    @GetMapping("/{page}/{size}")
+    public ResponseEntity<?> getPagesBook(@PathVariable("page") int page, @PathVariable("size") int size){
+        ApiResponse apiResponse = new ApiResponse(ErrorCode.SUCCESS.ID, bookService.getPages(page, size),null,Common.SUCCESS);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/getBookSortedByCountDesc")
-    public ResponseEntity<?> getSortCountDesc(@Param("start") int start, @Param("end") int end){
-        ApiResponse apiResponse = new ApiResponse(ErrorCode.SUCCESS.ID,bookService.getAllSortCountDsc(start, end),null,Common.SUCCESS);
+    @GetMapping("/asc/{page}/{size}")
+    public ResponseEntity<?> getSortCountAsc(@PathVariable("page") int page, @PathVariable("size") int size){
+        ApiResponse apiResponse = new ApiResponse(ErrorCode.SUCCESS.ID, bookService.getAllSortCountAsc(page,size),null,Common.SUCCESS);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/bookHasMaxCount")
+    @GetMapping("/desc/{page}/{size}")
+    public ResponseEntity<?> getSortCountDesc(@PathVariable("page") int page, @PathVariable("size") int size){
+        ApiResponse apiResponse = new ApiResponse(ErrorCode.SUCCESS.ID,bookService.getAllSortCountDsc(page, size),null,Common.SUCCESS);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/max")
     public ResponseEntity<?> maxCount(){
         ApiResponse apiResponse = new ApiResponse(ErrorCode.SUCCESS.ID,bookService.maxCount(),null,Common.SUCCESS);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/bookHasMinCount")
+    @GetMapping("/min")
     public ResponseEntity<?> minCount(){
         ApiResponse apiResponse = new ApiResponse(ErrorCode.SUCCESS.ID, bookService.minCount(),null,Common.SUCCESS);
         return new ResponseEntity<>(apiResponse,HttpStatus.OK);
     }
 
-    @GetMapping("/getBookSortedByNameAsc")
-    public ResponseEntity<?> getSortNameAsc(@Param("start") int start, @Param("end") int end){
+    @GetMapping("/name-asc")
+    public ResponseEntity<?> getSortNameAsc(@PathVariable("page") int start, @PathVariable("size") int end){
         ApiResponse apiResponse = new ApiResponse(ErrorCode.SUCCESS.ID, bookService.getAllSortNameAsc(start, end),null,Common.SUCCESS);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/getBookSortedByNameDesc")
-    public ResponseEntity<?> getSortNameDesc(@Param("start") int start, @Param("end") int end){
+    @GetMapping("/name-desc")
+    public ResponseEntity<?> getSortNameDesc(@PathVariable("page") int start, @PathVariable("size") int end){
         ApiResponse apiResponse = new ApiResponse(ErrorCode.SUCCESS.ID, bookService.getAllSortNameDsc(start, end),null,Common.SUCCESS);
         return new ResponseEntity<>(apiResponse,HttpStatus.OK);
     }
 
-    @PostMapping("/addBook")
+    @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody Books book){
         ApiResponse apiResponse;
         try {
@@ -78,8 +80,8 @@ public class BookController extends ResponseEntityExceptionHandler {
         }
     }
 
-    @DeleteMapping("/removeBookId")
-    public ResponseEntity<?> deleteBook(@Param("id") int id){
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<?> deleteBook(@PathVariable("id") int id){
         ApiResponse apiResponse;
         try {
             bookService.deleteBookById(id);
@@ -91,8 +93,8 @@ public class BookController extends ResponseEntityExceptionHandler {
         }
     }
 
-    @DeleteMapping("/removeBookByName")
-    public ResponseEntity<?> deleteBookName(@Param("name") String name){
+    @DeleteMapping("/remove/{name}")
+    public ResponseEntity<?> deleteBookName(@PathVariable("name") String name){
         ApiResponse apiResponse;
         try {
             bookService.deleteBookByName(name);
@@ -104,8 +106,8 @@ public class BookController extends ResponseEntityExceptionHandler {
         }
     }
 
-    @PutMapping("/updateBookById")
-    public ResponseEntity<?> updateBookId(@Param("id") int id,@Param("count")int count) {
+    @PutMapping("/updateById/{id}/{count}")
+    public ResponseEntity<?> updateBookId(@PathVariable("id") int id, @PathVariable("count")int count) {
         ApiResponse apiResponse;
         try {
             bookService.updateBookById(id, count);
@@ -122,8 +124,8 @@ public class BookController extends ResponseEntityExceptionHandler {
         }
     }
 
-    @PutMapping("updateBookByName")
-    public ResponseEntity<?> updateBookByName(@Param("name") String name, @Param("count") int count) {
+    @PutMapping("/updateByName/{name}/{count}")
+    public ResponseEntity<?> updateBookByName(@PathVariable("name") String name, @PathVariable("count") int count) {
         ApiResponse apiResponse;
         try {
             bookService.updateBookByName(name, count);
@@ -140,8 +142,8 @@ public class BookController extends ResponseEntityExceptionHandler {
         }
     }
 
-    @GetMapping("/findById")
-    public ResponseEntity<?> findById(@Param("id") int id) {
+    @GetMapping("/find/{id}")
+    public ResponseEntity<?> findById(@PathVariable("id") int id) {
         ApiResponse apiResponse;
         try {
             apiResponse = new ApiResponse(ErrorCode.SUCCESS.ID, bookService.findById(id),null, Common.FIND_SUCCESS);
