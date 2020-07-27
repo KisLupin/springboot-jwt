@@ -7,7 +7,6 @@ import com.lupin.security.inter.BookService;
 import com.lupin.security.model.ApiResponse;
 import com.lupin.security.model.Books;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,8 @@ public class BookController {
 
     @GetMapping("/{page}/{size}")
     public ResponseEntity<?> getPagesBook(@PathVariable("page") int page, @PathVariable("size") int size){
-        ApiResponse apiResponse = new ApiResponse(ErrorCode.SUCCESS.ID, bookService.getPages(page, size),null,Common.SUCCESS);
+        ApiResponse apiResponse = new ApiResponse(ErrorCode.SUCCESS.ID,
+                bookService.getPages(page, size),null,Common.SUCCESS);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 

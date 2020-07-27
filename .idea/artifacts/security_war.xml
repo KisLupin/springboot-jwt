@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="security:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>security</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="security-1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="security:war exploded" />
+    </root>
+  </artifact>
+</component>
